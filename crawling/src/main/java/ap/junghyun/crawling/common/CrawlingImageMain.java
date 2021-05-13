@@ -18,57 +18,44 @@ public class CrawlingImageMain {
 //        String cssQuery2 = "div.js-masonry-grid a>div>img";
         String cssQuery2 = "div.js-masonry-grid div.photo-tile>p";
 
-        String filePath = "C:\\pictureFile\\burstShopifyCom.csv";
+        String filePath = "C:\\pictureFile\\1.csv";
         CrawlerImage crawlerImage = new CrawlerImage();
         ServiceImage serviceImage = new ServiceImage();
         crawlerImage.setUrl(url + cateStr); // String url 할당
         crawlerImage.setCssQuery(cssQuery); // String cssQuery 할당
-//        System.out.println("setCssQuery :::::::: " + crawlerImage.getCssQuery());
         crawlerImage.setCssQuery2(cssQuery2); // String cssQuery 할당
-//        System.out.println("setCssQuery2 :::::::: " + crawlerImage.getCssQuery2());
         Document document = serviceImage.connectUrl(crawlerImage.getUrl());
-//        log.info("document ::::::::: " + document);
-//        log.info("documentCategory :::::::: " + documentCategory);
-//        log.info("document :::::::: " + document);
         Elements elements = document.select(crawlerImage.getCssQuery());
         Elements elements2 = document.select(crawlerImage.getCssQuery2());
-//        System.out.println("elements.size() ::: " + elements.size());
         List<PictureImage> list = new ArrayList<>();
         try {
             System.out.println("진입했나?");
-            BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "euc-kr"));
-           //BufferedImage fw = ImageIO.read(new File("url"));
+
+//            BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "euc-kr"));
+            DataOutputStream fw = new DataOutputStream(new FileOutputStream(filePath, true));
+
             System.out.println("imge");
             System.out.println("진입했나?2");
             for (int i = 0; i < elements2.size(); i++) {
                 PictureImage pictureImage = new PictureImage();
-//                System.out.println("Try 다 222");
 //                pictureImage.setTitle(elements.get(i).text());
                 pictureImage.setTitle(elements2.get(i).text());
                 pictureImage.setAddress(elements.get(i).attr("src"));
                 pictureImage.setCategory(cateStr);
-//                pictureImage.setAddress(elements2.get(i).attr("src"));
-//                System.out.println("Try 다333");
-//                pictureImage.setCategory(crawlerImage.getCategory());
-//                pictureImage.setCategory(crawlerImage.getCssQuery2());
+
                 System.out.println(pictureImage.toString());
                 list.add(pictureImage);
-//                System.out.println("pictureImage.getTitle() :::::::: " +  pictureImage.getTitle());
-//                System.out.println("pictureImage.getAddress() :::::::: " +  pictureImage.getAddress());
-//                System.out.println("pictureImage.getCategory() :::::::: " +  pictureImage.getCategory());
-//                log.info("pictureImage.getTitle() :::::::: " +  pictureImage.getTitle());
-//                log.info("pictureImage.getAddress() :::::::: " +  pictureImage.getAddress());
-//                log.info("pictureImage.getCategory() :::::::: " +  pictureImage.getCategory());
 
-//                System.out.println("Try 다444");
             }
             if (list.isEmpty()) {
                 System.out.println("크롤링 된 값이 없습니다:::::::::: !");
             } else {
                 for (PictureImage f : list) {
-                    fw.write(f.toString() + ",");
-                    fw.newLine();
-//                    System.out.println("크롤링 된 값이 있습니다:::::::::: !");
+//                    fw.write(f.toString() + ",");
+//                    fw.newLine();
+                    System.out.println(",");
+                    byte[] arr = f.toString().getBytes("UTF-8");
+                    fw.write(arr);
                 }
             }
             fw.flush();
